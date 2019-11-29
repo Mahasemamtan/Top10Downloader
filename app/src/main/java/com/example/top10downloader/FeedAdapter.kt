@@ -8,6 +8,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
+class ViewHolder(v: View) {
+    val tvName: TextView = v.findViewById(R.id.tvName)
+    val tvArtist: TextView = v.findViewById(R.id.tvArtist)
+    val tvSummery: TextView = v.findViewById(R.id.tvSummery)
+}
+
+
 class FeedAdapter(
     context: Context,
     private val resource: Int,
@@ -21,21 +28,21 @@ class FeedAdapter(
         Log.d(TAG, "getView() called")
 
         val view: View
-        if(convertView == null) {
+        val viewHolder: ViewHolder
+
+        if (convertView == null) {
             view = inflater.inflate(resource, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
         } else {
             view = convertView
+            viewHolder = view.tag as ViewHolder
         }
-
-        val tvName: TextView = view.findViewById(R.id.tvName)
-        val tvArtist: TextView = view.findViewById(R.id.tvArtist)
-        val tvSummery: TextView = view.findViewById(R.id.tvSummery)
-
         val currentApp = applications[position]
 
-        tvName.text = currentApp.name
-        tvArtist.text = currentApp.artist
-        tvSummery.text = currentApp.summery
+        viewHolder.tvName.text = currentApp.name
+        viewHolder.tvArtist.text = currentApp.artist
+        viewHolder.tvSummery.text = currentApp.summery
 
         return view
     }

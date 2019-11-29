@@ -4,8 +4,6 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.ListAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
 
-    private val downloadData by lazy { DownaloadData(this, xmlListView)}
+    private val downloadData by lazy { DownaloadData(this, xmlListView) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +29,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private class DownaloadData(context: Context, listView: ListView) : AsyncTask<String, Void, String>() {
+        private class DownaloadData(context: Context, listView: ListView) :
+            AsyncTask<String, Void, String>() {
             private val TAG = "DownloadData"
 
             var propContext: Context by Delegates.notNull()
@@ -48,7 +47,8 @@ class MainActivity : AppCompatActivity() {
                 val parseApplications = ParseApplications()
                 parseApplications.parse(result)
 
-                val feedAdapter = FeedAdapter(propContext, R.layout.list_record, parseApplications.applications)
+                val feedAdapter =
+                    FeedAdapter(propContext, R.layout.list_record, parseApplications.applications)
                 propListView.adapter = feedAdapter
             }
 
