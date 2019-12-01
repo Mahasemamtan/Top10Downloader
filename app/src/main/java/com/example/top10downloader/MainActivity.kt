@@ -3,6 +3,7 @@ package com.example.top10downloader
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -20,12 +21,20 @@ class MainActivity : AppCompatActivity() {
     private var feedUrl: String = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml"
     private var feedLimit = 10
 
+    private var cachedFeedUrl = "INVALIDATED"
+    private val STATE_URL = "feedUrl"
+    private val STATE_LIMIT = "feedLimit"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        downloadUrl(feedUrl.format(feedLimit))
+        if(savedInstanceState != null){
+            feedUrl = savedInstanceState.getString(STATE_URL).toString()
+            feedLimit = savedInstanceState.getInt(STATE_LIMIT)
+        }
 
+        downloadUrl(feedUrl.format(feedLimit))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -57,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "onOptionsItemSelected: ${item.title} setting feedLimit to unchanged")
                 }
             }
+            R.id.mnuRefresh -> cachedFeedUrl = "INVALIDATED"
             else ->
                 return super.onOptionsItemSelected(item)
         }
@@ -64,9 +74,20 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_URL, feedUrl)
+        outState.putInt(STATE_LIMIT, feedLimit)
+    }
+
     private fun downloadUrl(feedUrl: String) {
-        downloadData = DownaloadData(this, xmlListView)
-        downloadData?.execute(feedUrl)
+        if(feedUrl != cachedFeedUrl) {
+            downloadData = DownaloadData(this, xmlListView)
+            downloadData?.execute(feedUrl)
+            cachedFeedUrl = feedUrl
+        } else {
+            Log.d(TAG, "feedUrl - UNCHANGED")
+        }
     }
 
     override fun onDestroy() {
