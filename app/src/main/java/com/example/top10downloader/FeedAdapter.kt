@@ -8,21 +8,27 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
+private const val TAG = "FeedAdapter"
+
+
 class ViewHolder(v: View) {
     val tvName: TextView = v.findViewById(R.id.tvName)
     val tvArtist: TextView = v.findViewById(R.id.tvArtist)
     val tvSummery: TextView = v.findViewById(R.id.tvSummery)
 }
 
-
 class FeedAdapter(
     context: Context,
     private val resource: Int,
-    private val applications: List<FeedEntry>
+    private var applications: List<FeedEntry>
 ) : ArrayAdapter<FeedEntry>(context, resource) {
 
-    private val TAG = "FeedAdapter"
     private var inflater = LayoutInflater.from(context)
+
+    fun setFeedList(feedList: List<FeedEntry>) {
+        this.applications = feedList
+        notifyDataSetChanged()
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         Log.d(TAG, "getView() called")

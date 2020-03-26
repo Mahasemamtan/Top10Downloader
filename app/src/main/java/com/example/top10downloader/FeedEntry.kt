@@ -7,14 +7,4 @@ class FeedEntry {
     var releaseDate: String = ""
     var summery: String = ""
     var imageUrl: String = ""
-
-    override fun toString(): String {
-        return """
-            name = $name
-            artist = $artist
-            releaseDate = $releaseDate
-            summery = $summery
-            imageUrl = $imageUrl
-        """.trimIndent()
-    }
 }
